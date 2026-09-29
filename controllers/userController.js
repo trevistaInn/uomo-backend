@@ -4,8 +4,8 @@ import jwt from "jsonwebtoken";
 
 const refreshCookieOptions = {
     httpOnly: true,
-    secure: false,
-    sameSite: "strict",
+    secure: true,
+    sameSite: "none",
     path: "/api",
     maxAge: 7 * 24 * 60 * 60 * 1000,
 };
@@ -120,6 +120,7 @@ export const loginUser = async (req, res) => {
         );
 
         return res.status(200).json({
+            id: existingUser._id,
             name: existingUser.name,
             role: existingUser.role,
             accessToken,
@@ -159,6 +160,7 @@ export const refreshAccessToken = async (req, res) => {
         const accessToken = createAccessToken(user);
 
         return res.status(200).json({
+            id: user._id,
             name: user.name,
             role: user.role,
             accessToken,
@@ -173,8 +175,8 @@ export const refreshAccessToken = async (req, res) => {
 export const logoutUser = (req, res) => {
     res.clearCookie("refreshToken", {
         httpOnly: true,
-        secure: false,
-        sameSite: "strict",
+        secure: true,
+        sameSite: "none",
         path: "/api",
     });
 
